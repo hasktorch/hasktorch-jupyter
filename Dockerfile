@@ -15,7 +15,7 @@ RUN apt-get update -qq && \
     rm -rf /var/lib/apt/lists/*
 
 # Install Jupyter notebook
-RUN pip3 install -U jupyter
+RUN pip3 install -U jupyter jupyterlab pandas vega
 
 ENV LANG C.UTF-8
 ENV LC_ALL C.UTF-8
@@ -55,21 +55,26 @@ RUN cabal install alex happy
 # This is needed to load the libtorch shared library.
 RUN sed -i -e 's/ghc-options: -threaded -rtsopts -Wall/ghc-options: -threaded -rtsopts -Wall -dynamic/g' ihaskell/ihaskell.cabal
 
+# This is needed to show hvega
+RUN sed -i -e 's/application\/vnd.vegalite.v2+json/application\/vnd.vegalite.v4+json/g' ihaskell/ipython-kernel/src/IHaskell/IPython/Types.hs
+RUN sed -i -e 's/application\/vnd.vega.v2+json/application\/vnd.vega.v5+json/g' ihaskell/ipython-kernel/src/IHaskell/IPython/Types.hs
+
 RUN cabal v1-install \
           ./ihaskell \
           ./ihaskell/ipython-kernel \
           ./ihaskell/ghc-parser \
+	  ihaskell-hvega \
           ./hasktorch/hasktorch \
           ./hasktorch/libtorch-ffi \
           ./hasktorch/libtorch-ffi-helper \
           --ghc-options "-j10 +RTS -A128m -n2m -RTS"
 
-
 # Run the notebook
 RUN ihaskell install
 WORKDIR ${HOME}
+
 RUN jupyter notebook --generate-config
 
-USER ${NB_UID}
-
-CMD ["jupyter", "notebook", "--ip", "0.0.0.0"]
+#CMD ["jupyter", "notebook", "--ip", "0.0.0.0"]
+#CMD ["jupyter", "console", "--kernel", "haskell"]
+CMD ["jupyter", "lab", "--ip", "0.0.0.0"]
