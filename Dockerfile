@@ -51,7 +51,10 @@ RUN curl https://www.stackage.org/nightly-2020-08-23/cabal.config > cabal.projec
 
 RUN cabal update
 RUN cabal install alex happy
+
+# This is needed to load the libtorch shared library.
 RUN sed -i -e 's/ghc-options: -threaded -rtsopts -Wall/ghc-options: -threaded -rtsopts -Wall -dynamic/g' ihaskell/ihaskell.cabal
+
 RUN cabal v1-install \
           ./ihaskell \
           ./ihaskell/ipython-kernel \
