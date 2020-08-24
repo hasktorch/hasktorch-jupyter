@@ -38,3 +38,8 @@ The container files are as follows. If necessary, rewrite the command options or
 # Source code of hasktorch
 ~/hasktorch
 ```
+
+# FAQ
+
+* Q: Code of haskell other than hasktorch works, but only the hasktorch expression does not work and the kernel restarts.
+* A: ihaskell may not be able to read the shared files of libtorch. Rebuild ihaskell with -dynamic of ghc-options and install it.
