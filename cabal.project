@@ -1,0 +1,6 @@
+packages: ./ihaskell
+          ./ihaskell/ipython-kernel
+          ./ihaskell/ghc-parser
+          ./hasktorch/hasktorch
+          ./hasktorch/libtorch-ffi
+          ./hasktorch/libtorch-ffi-helper
