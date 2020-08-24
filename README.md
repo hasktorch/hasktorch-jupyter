@@ -18,7 +18,7 @@ docker build -t hasktorch-jupyter .
 
 ```
 docker pull docker.pkg.github.com/hasktorch/hasktorch-jupyter/hasktorch-jupyter:1.0
-docker tag hasktorch-jupyter:1.0 hasktorch-jupyter:latest
+docker tag docker.pkg.github.com/hasktorch/hasktorch-jupyter/hasktorch-jupyter:1.0 hasktorch-jupyter:latest
 ```
 
 ##  Running
