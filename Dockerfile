@@ -75,6 +75,22 @@ WORKDIR ${HOME}
 
 RUN jupyter notebook --generate-config
 
+USER 0
+RUN apt-get update -qq && \
+    apt install -y nodejs npm && \
+    rm -rf /var/lib/apt/lists/*
+RUN mkdir -p /usr/local/share/jupyter/lab && chmod 777 /usr/local/share/jupyter/lab
+
+
+USER ${NB_UID}
+RUN cd ihaskell/ihaskell_labextension && \
+    npm install && \
+    npm run-script build
+USER 0
+RUN cd ihaskell/ihaskell_labextension && \
+    jupyter labextension install .
+USER ${NB_UID}
+
 #CMD ["jupyter", "notebook", "--ip", "0.0.0.0"]
 #CMD ["jupyter", "console", "--kernel", "haskell"]
 CMD ["jupyter", "lab", "--ip", "0.0.0.0"]
