@@ -45,9 +45,9 @@ RUN cd hasktorch && git checkout aded63e6bfadf53beae9870480671768b194e11b
 ENV PATH /home/${NB_USER}/.cabal/bin:/opt/ghc/bin:${PATH}
 
 # Install dependencies for IHaskell
-COPY --chown=1000:1000 cabal.project cabal.project
+# COPY --chown=1000:1000 cabal.project cabal.project
 #COPY --chown=1000:1000 cabal.project.freeze cabal.project.freeze
-RUN curl https://www.stackage.org/nightly-2020-08-23/cabal.config > cabal.project.freeze
+RUN curl https://www.stackage.org/nightly-2020-08-23/cabal.config > cabal.freeze
 
 RUN cabal update
 RUN cabal install alex happy
@@ -67,7 +67,7 @@ RUN cabal v1-install \
           ./hasktorch/hasktorch \
           ./hasktorch/libtorch-ffi \
           ./hasktorch/libtorch-ffi-helper \
-          --ghc-options "-j10 +RTS -A128m -n2m -RTS"
+          --ghc-options "-j2 +RTS -A128m -n2m -RTS"
 
 # Run the notebook
 RUN ihaskell install
