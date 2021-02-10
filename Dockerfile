@@ -9,9 +9,9 @@ RUN apt-get update -qq && \
     apt install -y \
         python3-pip libgmp-dev libmagic-dev libtinfo-dev libzmq3-dev \
 	libcairo2-dev libpango1.0-dev libblas-dev liblapack-dev gcc g++ wget git \
-	ghc-8.10.2 cabal-install-3.2 cpphs emacs-nox strace curl && \
-    wget -q https://github.com/hasktorch/libtorch-binary-for-ci/releases/download/1.6.0/libtorch_1.6.0+cpu-1_amd64.deb && \
-    dpkg -i libtorch_1.6.0+cpu-1_amd64.deb && rm libtorch_1.6.0+cpu-1_amd64.deb	&& \
+	ghc-8.10.3 cabal-install-3.2 cpphs emacs-nox strace curl && \
+    wget -q https://github.com/hasktorch/libtorch-binary-for-ci/releases/download/1.7.0/libtorch_1.7.0+cpu-1_amd64.deb && \
+    dpkg -i libtorch_1.7.0+cpu-1_amd64.deb && rm libtorch_1.7.0+cpu-1_amd64.deb	&& \
     rm -rf /var/lib/apt/lists/*
 
 # Install Jupyter notebook
@@ -39,25 +39,18 @@ WORKDIR ${HOME}/
 RUN git clone https://github.com/gibiansky/IHaskell.git ihaskell
 RUN git clone https://github.com/hasktorch/hasktorch.git hasktorch
 
-RUN cd ihaskell && git checkout 49b03cf5a9a8e8f38a617551b80acf081f4ecc14
-RUN cd hasktorch && git checkout aded63e6bfadf53beae9870480671768b194e11b
+RUN cd ihaskell && git checkout e07b198f07d7dc7a12863f8507439ae3834947e4
+RUN cd hasktorch && git checkout be74a1eaabc2a6b56e21bbb24c870299d8e3bdb6
 
 ENV PATH /home/${NB_USER}/.cabal/bin:/opt/ghc/bin:${PATH}
 
 # Install dependencies for IHaskell
 # COPY --chown=1000:1000 cabal.project cabal.project
 #COPY --chown=1000:1000 cabal.project.freeze cabal.project.freeze
-RUN curl https://www.stackage.org/nightly-2020-08-23/cabal.config > cabal.freeze
+RUN curl https://www.stackage.org/lts-17.2/cabal.config > cabal.freeze
 
 RUN cabal update
 RUN cabal install alex happy
-
-# This is needed to load the libtorch shared library.
-RUN sed -i -e 's/ghc-options: -threaded -rtsopts -Wall/ghc-options: -threaded -rtsopts -Wall -dynamic/g' ihaskell/ihaskell.cabal
-
-# This is needed to show hvega
-RUN sed -i -e 's/application\/vnd.vegalite.v2+json/application\/vnd.vegalite.v4+json/g' ihaskell/ipython-kernel/src/IHaskell/IPython/Types.hs
-RUN sed -i -e 's/application\/vnd.vega.v2+json/application\/vnd.vega.v5+json/g' ihaskell/ipython-kernel/src/IHaskell/IPython/Types.hs
 
 RUN cabal v1-install \
           ./ihaskell \
@@ -76,18 +69,20 @@ WORKDIR ${HOME}
 RUN jupyter notebook --generate-config
 
 USER 0
+
+RUN curl -sL https://deb.nodesource.com/setup_lts.x | bash -
 RUN apt-get update -qq && \
-    apt install -y nodejs npm && \
+    apt install -y nodejs && \
     rm -rf /var/lib/apt/lists/*
 RUN mkdir -p /usr/local/share/jupyter/lab && chmod 777 /usr/local/share/jupyter/lab
 
 
 USER ${NB_UID}
-RUN cd ihaskell/ihaskell_labextension && \
+RUN cd ihaskell/jupyterlab-ihaskell && \
     npm install && \
     npm run-script build
 USER 0
-RUN cd ihaskell/ihaskell_labextension && \
+RUN cd ihaskell/jupyterlab-ihaskell && \
     jupyter labextension install .
 USER ${NB_UID}
 
