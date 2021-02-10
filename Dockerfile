@@ -60,7 +60,7 @@ RUN cabal v1-install \
           ./hasktorch/hasktorch \
           ./hasktorch/libtorch-ffi \
           ./hasktorch/libtorch-ffi-helper \
-          --ghc-options "-j2 +RTS -A128m -n2m -RTS"
+          --ghc-options "-j1 +RTS -A128m -n2m -RTS"
 
 # Run the notebook
 RUN ihaskell install
