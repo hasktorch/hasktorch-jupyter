@@ -9,9 +9,9 @@ RUN apt-get update -qq && \
     apt install -y \
         python3-pip libgmp-dev libmagic-dev libtinfo-dev libzmq3-dev \
 	libcairo2-dev libpango1.0-dev libblas-dev liblapack-dev gcc g++ wget git \
-	ghc-8.10.3 cabal-install-3.2 cpphs emacs-nox strace curl && \
-    wget -q https://github.com/hasktorch/libtorch-binary-for-ci/releases/download/1.7.0/libtorch_1.7.0+cpu-1_amd64.deb && \
-    dpkg -i libtorch_1.7.0+cpu-1_amd64.deb && rm libtorch_1.7.0+cpu-1_amd64.deb	&& \
+	ghc-8.10.4 cabal-install-3.2 cpphs emacs-nox strace curl && \
+    wget -q https://github.com/hasktorch/libtorch-binary-for-ci/releases/download/1.8.0/libtorch_1.8.0+cpu-1_amd64.deb && \
+    dpkg -i libtorch_1.8.0+cpu-1_amd64.deb && rm libtorch_1.8.0+cpu-1_amd64.deb	&& \
     rm -rf /var/lib/apt/lists/*
 
 # Install Jupyter notebook
@@ -39,15 +39,15 @@ WORKDIR ${HOME}/
 RUN git clone https://github.com/gibiansky/IHaskell.git ihaskell
 RUN git clone https://github.com/hasktorch/hasktorch.git hasktorch
 
-RUN cd ihaskell && git checkout e07b198f07d7dc7a12863f8507439ae3834947e4
-RUN cd hasktorch && git checkout be74a1eaabc2a6b56e21bbb24c870299d8e3bdb6
+RUN cd ihaskell && git checkout 0f1262d3e710518fd734fbda6f2eba33e476836b
+RUN cd hasktorch && git checkout c9f86bd09fa9746adc1ff3a6da1eac343d1bbc52
 
 ENV PATH /home/${NB_USER}/.cabal/bin:/opt/ghc/bin:${PATH}
 
 # Install dependencies for IHaskell
 # COPY --chown=1000:1000 cabal.project cabal.project
 #COPY --chown=1000:1000 cabal.project.freeze cabal.project.freeze
-RUN curl https://www.stackage.org/lts-17.2/cabal.config > cabal.freeze
+RUN curl https://www.stackage.org/lts-17.6/cabal.config > cabal.freeze
 
 RUN cabal update
 RUN cabal install alex happy
