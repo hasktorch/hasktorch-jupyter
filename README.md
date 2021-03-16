@@ -14,7 +14,7 @@ cd hasktorch-jupyter
 docker build -t hasktorch-jupyter .
 ```
 
-## Install from github-packages
+## Install from dockerhub
 
 ```
 docker pull htorch/hasktorch-jupyter:latest
