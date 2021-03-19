@@ -21,7 +21,18 @@ docker pull htorch/hasktorch-jupyter:latest
 docker tag htorch/hasktorch-jupyter:latest hasktorch-jupyter:latest
 ```
 
-##  Running
+##  Running with CUDA
+
+```
+# Run with web-console
+docker run --gpus all -it --rm -p 8888:8888 hasktorch-jupyter
+
+# Run with CLI
+docker run --gpus all -it --rm -p 8888:8888 bash
+jupyter console --kernel haskell
+```
+
+##  Running without CUDA
 
 ```
 # Run with web-console

@@ -10,8 +10,8 @@ RUN apt-get update -qq && \
         python3-pip libgmp-dev libmagic-dev libtinfo-dev libzmq3-dev \
 	libcairo2-dev libpango1.0-dev libblas-dev liblapack-dev gcc g++ wget git \
 	ghc-8.10.4 cabal-install-3.2 cpphs emacs-nox strace curl && \
-    wget -q https://github.com/hasktorch/libtorch-binary-for-ci/releases/download/1.8.0/libtorch_1.8.0+cpu-1_amd64.deb && \
-    dpkg -i libtorch_1.8.0+cpu-1_amd64.deb && rm libtorch_1.8.0+cpu-1_amd64.deb	&& \
+    wget -q https://github.com/hasktorch/libtorch-binary-for-ci/releases/download/1.8.0/libtorch_1.8.0+cu111-1_amd64.deb && \
+    dpkg -i libtorch_1.8.0+cu111-1_amd64.deb && rm libtorch_1.8.0+cu111-1_amd64.deb	&& \
     rm -rf /var/lib/apt/lists/*
 
 # Install Jupyter notebook
@@ -85,6 +85,9 @@ USER 0
 RUN cd ihaskell/jupyterlab-ihaskell && \
     jupyter labextension install .
 USER ${NB_UID}
+
+ENV NVIDIA_VISIBLE_DEVICES all
+ENV NVIDIA_DRIVER_CAPABILITIES utility,compute
 
 #CMD ["jupyter", "notebook", "--ip", "0.0.0.0"]
 #CMD ["jupyter", "console", "--kernel", "haskell"]
