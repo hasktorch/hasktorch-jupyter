@@ -1,4 +1,4 @@
-name: build-docker-image
+name: build-docker-image-cu11
 
 on: [push, pull_request]
 
@@ -28,6 +28,8 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         push: true
-        tags: htorch/hasktorch-jupyter:latest
+        tags: |
+          htorch/hasktorch-jupyter:latest
+          htorch/hasktorch-jupyter:latest-cu11
     - name: Image digest
       run: echo ${{ steps.docker_build.outputs.digest }}

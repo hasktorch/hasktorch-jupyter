@@ -1,4 +1,4 @@
-name: build-docker-image-cu10
+name: build-docker-image-cpu
 
 on: [push, pull_request]
 
@@ -27,8 +27,7 @@ jobs:
       id: docker_build
       uses: docker/build-push-action@v2
       with:
-        file: Dockerfile.cu10
         push: true
-        tags: htorch/hasktorch-jupyter:latest-cu10
+        tags: htorch/hasktorch-jupyter:latest-cpu
     - name: Image digest
       run: echo ${{ steps.docker_build.outputs.digest }}
