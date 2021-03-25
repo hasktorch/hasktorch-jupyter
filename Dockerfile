@@ -9,7 +9,8 @@ RUN apt-get update -qq && \
     apt install -y \
         python3-pip libgmp-dev libmagic-dev libtinfo-dev libzmq3-dev \
 	libcairo2-dev libpango1.0-dev libblas-dev liblapack-dev gcc g++ wget git \
-	ghc-8.10.4 cabal-install-3.2 cpphs emacs-nox strace curl && \
+	ghc-8.10.4 cabal-install-3.2 cpphs \
+	emacs-nox vim strace curl unzip sudo && \
     wget -q https://github.com/hasktorch/libtorch-binary-for-ci/releases/download/1.8.0/libtorch_1.8.0+cu111-1_amd64.deb && \
     dpkg -i libtorch_1.8.0+cu111-1_amd64.deb && rm libtorch_1.8.0+cu111-1_amd64.deb	&& \
     rm -rf /var/lib/apt/lists/*
@@ -27,6 +28,9 @@ RUN adduser --disabled-password \
     --gecos "Default user" \
     --uid ${NB_UID} \
     ${NB_USER}
+
+RUN adduser ${NB_USER} sudo
+RUN echo 'ubuntu ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
 # Set up a working directory for IHaskell
 RUN install -d -o ${NB_UID} -g ${NB_UID} ${HOME} ${HOME}/ihaskell
