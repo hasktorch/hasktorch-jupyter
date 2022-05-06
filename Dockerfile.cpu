@@ -11,8 +11,8 @@ RUN apt-get update -qq && \
 	libcairo2-dev libpango1.0-dev libblas-dev liblapack-dev gcc g++ wget git \
 	ghc-8.10.4 cabal-install-3.2 cpphs \
 	emacs-nox vim strace curl unzip sudo && \
-    wget -q https://github.com/hasktorch/libtorch-binary-for-ci/releases/download/1.8.0/libtorch_1.8.0+cpu-1_amd64.deb && \
-    dpkg -i libtorch_1.8.0+cpu-1_amd64.deb && rm libtorch_1.8.0+cpu-1_amd64.deb	&& \
+    wget -q https://github.com/hasktorch/libtorch-binary-for-ci/releases/download/1.11.0/libtorch_1.11.0+cpu-1_amd64.deb && \
+    dpkg -i libtorch_1.11.0+cpu-1_amd64.deb && rm libtorch_1.11.0+cpu-1_amd64.deb	&& \
     rm -rf /var/lib/apt/lists/*
 
 # Install Jupyter notebook
@@ -44,7 +44,7 @@ RUN git clone https://github.com/gibiansky/IHaskell.git ihaskell
 RUN git clone https://github.com/hasktorch/hasktorch.git hasktorch
 
 RUN cd ihaskell && git checkout 0f1262d3e710518fd734fbda6f2eba33e476836b
-RUN cd hasktorch && git checkout c9f86bd09fa9746adc1ff3a6da1eac343d1bbc52
+RUN cd hasktorch && git checkout 0e942d6af90585662463c913acfbbe8036644cb1
 
 ENV PATH /home/${NB_USER}/.cabal/bin:/opt/ghc/bin:${PATH}
 
